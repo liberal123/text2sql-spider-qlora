@@ -1,0 +1,40 @@
+model_name_or_path: Qwen/Qwen2.5-Coder-1.5B-Instruct
+train_file: data/processed_smoke/train.jsonl
+validation_file: data/processed_smoke/valid.jsonl
+output_dir: artifacts/adapters/smoke-qwen25-coder-1.5b-spider-qlora
+
+max_seq_length: 1024
+num_train_epochs: 1
+per_device_train_batch_size: 1
+per_device_eval_batch_size: 1
+gradient_accumulation_steps: 2
+learning_rate: 0.0002
+warmup_ratio: 0.03
+weight_decay: 0.0
+lr_scheduler_type: cosine
+logging_steps: 1
+eval_steps: 10
+save_steps: 10
+save_total_limit: 1
+seed: 42
+
+use_4bit: true
+bnb_4bit_quant_type: nf4
+bnb_4bit_use_double_quant: true
+compute_dtype: float16
+gradient_checkpointing: true
+
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+lora_target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+
+report_to: none
+wandb_project: text2sql-spider-qlora-smoke

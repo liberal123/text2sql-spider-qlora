@@ -1,0 +1,87 @@
+{
+  "validation_time_Asia_Shanghai": "2026-10-10T22:13:15.019138+08:00",
+  "scope": "CPU engineering tests and scripted artificial SQLite demo; not model quality evaluation",
+  "python": "3.12.13",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "packages": {
+    "fastapi": "0.115.14",
+    "starlette": "0.46.2",
+    "uvicorn": "0.35.0",
+    "pydantic": "2.14.0",
+    "pydantic-core": "2.50.0",
+    "httpx": "0.28.1",
+    "httpcore": "1.0.9",
+    "anyio": "4.15.1",
+    "h11": "0.16.0",
+    "click": "8.5.0",
+    "typing-extensions": "4.16.0",
+    "typing-inspection": "0.4.4",
+    "annotated-types": "0.8.0",
+    "certifi": "2026.7.22",
+    "idna": "3.20"
+  },
+  "tests": {
+    "command": "python -m unittest discover -s tests -v",
+    "total": 46,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "python_syntax_files_checked": 19,
+  "cli_checks": [
+    {
+      "command": "python -m text2sql_finetune.prepare_data --help",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m text2sql_finetune.train_qlora --help",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m text2sql_finetune.evaluate --help",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m text2sql_finetune.serve --help",
+      "exit_code": 0
+    }
+  ],
+  "demo": {
+    "mode": "scripted_demo",
+    "notice": "脚本演示：使用人工数据库和固定 SQL，不是 Qwen 推理，也不代表模型评估结果。",
+    "question": "列出所有员工的姓名和部门",
+    "initial_sql": "SELECT e.employee_name, d.name AS department FROM employees AS e JOIN departments AS d ON e.department_id = d.id ORDER BY e.id",
+    "initial_error": "no such column: e.employee_name",
+    "repaired_sql": "SELECT e.name, d.name AS department FROM employees AS e JOIN departments AS d ON e.department_id = d.id ORDER BY e.id",
+    "repair_attempted": true,
+    "repaired": true,
+    "result_rows": [
+      [
+        "陈晨",
+        "研发"
+      ],
+      [
+        "林晓",
+        "研发"
+      ],
+      [
+        "王宁",
+        "产品"
+      ],
+      [
+        "赵然",
+        "运营"
+      ],
+      [
+        "周敏",
+        "产品"
+      ]
+    ],
+    "columns": [
+      "name",
+      "department"
+    ]
+  },
+  "gpu_training_performed": false,
+  "spider_model_accuracy_measured": false
+}

@@ -1,0 +1,77 @@
+test_all_filtered_examples_fail_before_training (test_data_training.CompletionOnlyTests.test_all_filtered_examples_fail_before_training) ... ok
+test_best_checkpoint_steps_must_match (test_data_training.CompletionOnlyTests.test_best_checkpoint_steps_must_match) ... ok
+test_dataset_records_filtering_and_retains_only_complete_sql (test_data_training.CompletionOnlyTests.test_dataset_records_filtering_and_retains_only_complete_sql) ... ok
+test_empty_sql_is_rejected (test_data_training.CompletionOnlyTests.test_empty_sql_is_rejected) ... ok
+test_overlong_prompt_or_sql_is_discarded_without_partial_labels (test_data_training.CompletionOnlyTests.test_overlong_prompt_or_sql_is_discarded_without_partial_labels) ... ok
+test_prompt_mask_sql_and_eos_labels_are_complete (test_data_training.CompletionOnlyTests.test_prompt_mask_sql_and_eos_labels_are_complete) ... ok
+test_data_prepare_writes_actual_counts_hashes_and_split_manifest (test_data_training.DataProtocolTests.test_data_prepare_writes_actual_counts_hashes_and_split_manifest) ... {
+  "metadata": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\tmpp4lsyn9j\\processed\\dataset_meta.json",
+  "output_splits": {
+    "train": {
+      "sample_count": 1,
+      "database_count": 1,
+      "db_ids": [
+        "train_db"
+      ]
+    },
+    "valid": {
+      "sample_count": 2,
+      "database_count": 1,
+      "db_ids": [
+        "db_a"
+      ]
+    },
+    "test": {
+      "sample_count": 2,
+      "database_count": 1,
+      "db_ids": [
+        "db_b"
+      ]
+    }
+  }
+}
+ok
+test_database_leakage_is_rejected (test_data_training.DataProtocolTests.test_database_leakage_is_rejected) ... ok
+test_dev_split_groups_whole_databases_and_is_reproducible (test_data_training.DataProtocolTests.test_dev_split_groups_whole_databases_and_is_reproducible) ... ok
+test_missing_required_source_fails (test_data_training.DataProtocolTests.test_missing_required_source_fails) ... ok
+test_smoke_count_reports_actual_rows_and_databases (test_data_training.DataProtocolTests.test_smoke_count_reports_actual_rows_and_databases) ... ok
+test_stable_sample_id_uses_sha256_and_tracks_content (test_data_training.DataProtocolTests.test_stable_sample_id_uses_sha256_and_tracks_content) ... ok
+test_creation_and_no_overwrite (test_demo.ArtificialDatabaseTests.test_creation_and_no_overwrite) ... ok
+test_demo_is_labeled_and_repairs_once (test_demo.DemoApiTests.test_demo_is_labeled_and_repairs_once) ... ok
+test_expensive_recursive_query_times_out (test_demo.DemoApiTests.test_expensive_recursive_query_times_out) ... ok
+test_external_file_functions_and_multiple_statements_are_blocked (test_demo.DemoApiTests.test_external_file_functions_and_multiple_statements_are_blocked) ... ok
+test_failed_repair_is_reported_and_never_repeated (test_demo.DemoApiTests.test_failed_repair_is_reported_and_never_repeated) ... ok
+test_no_repair_option_preserves_failure (test_demo.DemoApiTests.test_no_repair_option_preserves_failure) ... ok
+test_output_limit_is_explicit (test_demo.DemoApiTests.test_output_limit_is_explicit) ... ok
+test_path_escape_and_invalid_limits_are_rejected (test_demo.DemoApiTests.test_path_escape_and_invalid_limits_are_rejected) ... ok
+test_write_attempt_is_blocked_without_changing_database (test_demo.DemoApiTests.test_write_attempt_is_blocked_without_changing_database) ... ok
+test_adapter_is_optional_for_base_model_baseline (test_evaluation.EvaluationTests.test_adapter_is_optional_for_base_model_baseline) ... ok
+test_denominators_and_zero_denominator_are_explicit (test_evaluation.EvaluationTests.test_denominators_and_zero_denominator_are_explicit) ... ok
+test_executable_but_wrong_prediction_does_not_receive_reference_feedback (test_evaluation.EvaluationTests.test_executable_but_wrong_prediction_does_not_receive_reference_feedback) ... ok
+test_executable_repair_is_reported_separately_from_correct_repair (test_evaluation.EvaluationTests.test_executable_repair_is_reported_separately_from_correct_repair) ... ok
+test_executed_null_and_duplicate_changes_are_not_correct (test_evaluation.EvaluationTests.test_executed_null_and_duplicate_changes_are_not_correct) ... ok
+test_invalid_resource_limits_are_rejected (test_evaluation.EvaluationTests.test_invalid_resource_limits_are_rejected) ... ok
+test_missing_database_is_not_created (test_evaluation.EvaluationTests.test_missing_database_is_not_created) ... ok
+test_normalization_preserves_quoted_values_and_comment_characters (test_evaluation.EvaluationTests.test_normalization_preserves_quoted_values_and_comment_characters) ... ok
+test_offline_cli_aligns_ids_and_writes_auditable_results_without_model (test_evaluation.EvaluationTests.test_offline_cli_aligns_ids_and_writes_auditable_results_without_model) ... ok
+test_only_reference_outer_order_by_controls_comparison (test_evaluation.EvaluationTests.test_only_reference_outer_order_by_controls_comparison) ... ok
+test_order_detection_ignores_strings_comments_and_inner_query (test_evaluation.EvaluationTests.test_order_detection_ignores_strings_comments_and_inner_query) ... ok
+test_prediction_error_can_be_repaired_and_initial_result_survives (test_evaluation.EvaluationTests.test_prediction_error_can_be_repaired_and_initial_result_survives) ... ok
+test_prediction_ids_are_explicit_and_unique (test_evaluation.EvaluationTests.test_prediction_ids_are_explicit_and_unique) ... ok
+test_query_budget_interrupts_computation (test_evaluation.EvaluationTests.test_query_budget_interrupts_computation) ... ok
+test_readonly_select_and_cte (test_evaluation.EvaluationTests.test_readonly_select_and_cte) ... ok
+test_reference_failure_is_excluded_and_never_sent_to_repair (test_evaluation.EvaluationTests.test_reference_failure_is_excluded_and_never_sent_to_repair) ... ok
+test_result_comparison_preserves_null_strings_types_and_duplicates (test_evaluation.EvaluationTests.test_result_comparison_preserves_null_strings_types_and_duplicates) ... ok
+test_row_limit_is_error_instead_of_partial_success (test_evaluation.EvaluationTests.test_row_limit_is_error_instead_of_partial_success) ... ok
+test_writes_and_multiple_statements_cannot_modify_database (test_evaluation.EvaluationTests.test_writes_and_multiple_statements_cannot_modify_database) ... ok
+test_zero_repair_budget_never_invokes_callback (test_evaluation.EvaluationTests.test_zero_repair_budget_never_invokes_callback) ... ok
+test_literal_case_and_spaces_survive_normalization (test_formatting.FormattingTests.test_literal_case_and_spaces_survive_normalization) ... ok
+test_multiple_statements_are_not_silently_dropped (test_formatting.FormattingTests.test_multiple_statements_are_not_silently_dropped) ... ok
+test_quoted_semicolon_is_not_truncated (test_formatting.FormattingTests.test_quoted_semicolon_is_not_truncated) ... ok
+test_readonly_keyword_in_literal (test_formatting.FormattingTests.test_readonly_keyword_in_literal) ... ok
+test_composite_key_produces_valid_create_table (test_schema.SchemaTests.test_composite_key_produces_valid_create_table) ... ok
+
+----------------------------------------------------------------------
+Ran 46 tests in 0.607s
+
+OK

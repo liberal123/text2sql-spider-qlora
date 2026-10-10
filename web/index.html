@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Text-to-SQL · 执行反馈演示</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #203047; background: #f4f7fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { max-width: 1040px; margin: 40px auto; padding: 0 22px 40px; }
+    h1 { font-size: 30px; margin: 0 0 10px; }
+    .subtitle { color: #63738b; margin: 0 0 24px; line-height: 1.65; }
+    .notice { background: #fff3cd; color: #735211; border: 1px solid #e8d084; border-radius: 10px; padding: 14px 18px; line-height: 1.6; margin-bottom: 20px; }
+    .card { background: white; border: 1px solid #e1e7f0; border-radius: 14px; padding: 22px; margin: 18px 0; }
+    label { display: block; margin: 0 0 8px; font-weight: 600; }
+    select, textarea, input { font: inherit; border: 1px solid #c8d2e2; border-radius: 8px; padding: 10px 12px; }
+    select, textarea { width: 100%; margin-bottom: 18px; }
+    textarea { min-height: 90px; resize: vertical; }
+    button { font: inherit; border: 0; border-radius: 8px; padding: 11px 17px; color: #fff; background: #2454c8; cursor: pointer; }
+    button:disabled { opacity: .55; cursor: wait; }
+    .samples { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .samples button { font-size: 13px; color: #2454c8; background: #ecf2ff; }
+    .options { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin-bottom: 15px; }
+    .options label { font-size: 14px; margin: 0; font-weight: normal; }
+    input[type=number] { width: 80px; padding: 6px; }
+    h2 { font-size: 19px; margin-top: 0; }
+    h3 { font-size: 14px; color: #63738b; margin-bottom: 9px; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: 15px; background: #eff3f9; border-radius: 8px; line-height: 1.6; margin-top: 0; }
+    .status { min-height: 24px; color: #63738b; line-height: 1.6; }
+    .error { color: #aa293d; }
+    .success { color: #18714d; }
+    .table-wrap { overflow-x: auto; }
+    table { border-collapse: collapse; min-width: 100%; font-size: 14px; }
+    th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid #e1e7f0; }
+    th { background: #f5f7fb; }
+    [hidden] { display: none !important; }
+    footer { color: #73839a; font-size: 13px; line-height: 1.7; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Text-to-SQL · 执行反馈演示</h1>
+  <p class="subtitle">输入问题，查看 SQL 生成、SQLite 执行错误、一次修复以及最终查询结果。</p>
+  <div id="notice" class="notice">正在读取服务状态……</div>
+  <form id="query-form" class="card">
+    <label for="database">数据库</label>
+    <select id="database" required><option value="">正在加载……</option></select>
+    <label for="question">自然语言问题</label>
+    <div id="samples" class="samples"></div>
+    <textarea id="question" maxlength="2000" required placeholder="输入数据库相关问题"></textarea>
+    <div class="options">
+      <label><input id="repair" type="checkbox" checked> 执行失败后尝试一次修复</label>
+      <label>最多显示 <input id="max-rows" type="number" min="1" max="200" value="50"> 行</label>
+    </div>
+    <button id="submit" type="submit">生成并执行 SQL</button>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+  </form>
+  <section id="results" class="card" hidden>
+    <h2>执行过程</h2>
+    <h3>1. 初始 SQL</h3><pre id="initial-sql"></pre>
+    <div id="initial-error-block" hidden><h3>2. SQLite 错误反馈</h3><pre id="initial-error" class="error"></pre></div>
+    <div id="repair-block" hidden><h3>3. 修复 SQL</h3><pre id="repair-sql"></pre></div>
+    <p id="result-status" class="status"></p>
+    <div id="table-wrap" class="table-wrap"><table><thead id="table-head"></thead><tbody id="table-body"></tbody></table></div>
+    <p id="row-info" class="subtitle"></p>
+  </section>
+  <footer>默认只监听本机。服务只读取配置目录中的 SQLite 数据库，仅允许只读查询；执行成功表示 SQL 可运行，不能证明它正确回答了问题。</footer>
+</main>
+<script>
+  const byId = id => document.getElementById(id);
+  async function loadDatabases() {
+    try {
+      const response = await fetch('/api/databases');
+      if (!response.ok) throw new Error('无法读取数据库列表');
+      const data = await response.json();
+      byId('notice').textContent = data.notice;
+      byId('database').replaceChildren();
+      for (const database of data.databases) {
+        const option = document.createElement('option');
+        option.value = database.id; option.textContent = database.name;
+        byId('database').append(option);
+      }
+      if (!data.databases.length) {
+        byId('status').textContent = '配置目录没有数据库。脚本演示请先运行 python examples/demo.py。';
+        byId('submit').disabled = true;
+      }
+      for (const question of data.demo_questions) {
+        const button = document.createElement('button');
+        button.type = 'button'; button.textContent = question;
+        button.addEventListener('click', () => { byId('question').value = question; });
+        byId('samples').append(button);
+      }
+      if (data.demo_questions.length) byId('question').value = data.demo_questions[0];
+    } catch (error) {
+      byId('notice').textContent = error.message;
+      byId('submit').disabled = true;
+    }
+  }
+  byId('query-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    byId('submit').disabled = true;
+    byId('status').textContent = '正在生成并执行，请稍候……';
+    byId('results').hidden = true;
+    try {
+      const response = await fetch('/api/query', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({database: byId('database').value, question: byId('question').value,
+          repair_on_error: byId('repair').checked, max_rows: Number(byId('max-rows').value)})
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail));
+      byId('notice').textContent = data.notice;
+      byId('initial-sql').textContent = data.initial_sql;
+      byId('initial-error-block').hidden = !data.initial_error;
+      byId('initial-error').textContent = data.initial_error || '';
+      byId('repair-block').hidden = !data.repair_attempted;
+      byId('repair-sql').textContent = data.repaired_sql || '修复生成失败，没有得到 SQL。';
+      byId('result-status').textContent = data.error ? ('执行失败：' + data.error) :
+        (data.repaired ? '一次修复后执行成功。' : '初始 SQL 执行成功。');
+      byId('result-status').className = 'status ' + (data.error ? 'error' : 'success');
+      byId('table-head').replaceChildren(); byId('table-body').replaceChildren();
+      const header = document.createElement('tr');
+      for (const column of data.columns) { const cell = document.createElement('th'); cell.textContent = column; header.append(cell); }
+      byId('table-head').append(header);
+      for (const row of data.rows) {
+        const tr = document.createElement('tr');
+        for (const value of row) { const cell = document.createElement('td'); cell.textContent = value === null ? 'NULL' : String(value); tr.append(cell); }
+        byId('table-body').append(tr);
+      }
+      byId('table-wrap').hidden = Boolean(data.error);
+      byId('row-info').textContent = data.error ? '' : ('显示 ' + data.rows.length + ' 行' +
+        (data.truncated ? '（结果超过展示上限，已截断）' : ''));
+      byId('results').hidden = false;
+      byId('status').textContent = '执行过程已更新。';
+    } catch (error) {
+      byId('status').textContent = '请求失败：' + error.message;
+    } finally {
+      byId('submit').disabled = false;
+    }
+  });
+  loadDatabases();
+</script>
+</body>
+</html>

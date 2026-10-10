@@ -1,0 +1,36 @@
+# Local environments and credentials
+.venv/
+venv/
+.env
+.env.*
+.idea/
+.vscode/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.cache/
+.DS_Store
+Thumbs.db
+# Datasets, weights and generated demo database
+data/
+artifacts/
+examples/demo_databases/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.sqlite
+*.db
+*.zip
+*.tar
+*.gz
+wandb/
+runs/
+*_backup*/
+*.bak
+# Local review notes are not public project documentation.
+docs/RESUME_AND_REVIEW.md
+.runtime-deps/

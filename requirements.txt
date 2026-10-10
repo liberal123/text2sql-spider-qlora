@@ -1,0 +1,3 @@
+# Install a suitable CUDA PyTorch wheel first for GPU training.
+torch>=2.7.0,<2.8.0
+-r requirements-train-cu118.txt
